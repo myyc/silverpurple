@@ -49,8 +49,8 @@ modules:
       - syncthing
       - waydroid
 
-  # Flatpak config
-  - type: default-flatpaks
+  # Flatpak config - remove Fedora remote
+  - type: default-flatpaks@v1
     system:
       repo-url: ""
       repo-name: ""
