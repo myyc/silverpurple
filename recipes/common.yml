@@ -45,6 +45,7 @@ modules:
       - libswresample-free
       - libswscale-free
       - mesa-va-drivers
+      - pipewire-config-raop
     install:
       # Codecs and drivers (from RPM Fusion)
       - ffmpeg
