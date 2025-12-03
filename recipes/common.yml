@@ -1,6 +1,9 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/module-list-v1.json
 modules:
+  # Signing policy (baked into image for automatic verification)
+  - type: signing
+
   # First: Install RPM Fusion repos and Mullvad repo
   - type: rpm-ostree
     repos:

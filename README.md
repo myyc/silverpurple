@@ -11,6 +11,22 @@ Custom Fedora Silverblue 43 image built with [BlueBuild](https://blue-build.org/
 
 ## Rebase
 
+### First time (from stock Silverblue)
+
+Use the unsigned image to get signing policies installed:
+
+```bash
+# Base
+rpm-ostree rebase ostree-unverified-registry:ghcr.io/myyc/silverpurple:latest
+
+# Nvidia
+rpm-ostree rebase ostree-unverified-registry:ghcr.io/myyc/silverpurple-nvidia:latest
+```
+
+Reboot, then you're set. Future rebases will use signed verification automatically.
+
+### Subsequent rebases
+
 ```bash
 # Base
 rpm-ostree rebase ostree-image-signed:docker://ghcr.io/myyc/silverpurple:latest
