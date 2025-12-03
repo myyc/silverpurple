@@ -7,15 +7,7 @@ image-version: 43
 modules:
   - from-file: common.yml
 
-  # Nvidia kernel modules
+  # Nvidia kernel modules (from ublue-os/akmods)
   - type: akmods
-    install:
-      - nvidia
-
-  # Nvidia userspace packages
-  - type: rpm-ostree
-    install:
-      - xorg-x11-drv-nvidia
-      - xorg-x11-drv-nvidia-cuda
-      - nvidia-vaapi-driver
-      - libva-nvidia-driver
+    base: main
+    nvidia-driver: nvidia
