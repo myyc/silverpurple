@@ -1,11 +1,15 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/module-list-v1.json
 modules:
-  # OS branding
+  # OS branding (base values, build-info.sh adds version)
   - type: os-release
     properties:
-      PRETTY_NAME: Silverpurple
       NAME: Silverpurple
+
+  # Add build timestamp/hash to os-release
+  - type: script
+    scripts:
+      - build-info.sh
 
   # Signing policy (baked into image for automatic verification)
   - type: signing
