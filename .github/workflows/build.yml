@@ -34,3 +34,16 @@ jobs:
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
+
+  notify:
+    name: Notify on failure
+    runs-on: ubuntu-latest
+    needs: build
+    if: failure()
+    steps:
+      - name: Send Telegram notification
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d parse_mode="Markdown" \
+            -d text="❌ *Silverpurple build failed*%0A%0AWorkflow: ${{ github.workflow }}%0ABranch: ${{ github.ref_name }}%0A[View logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
