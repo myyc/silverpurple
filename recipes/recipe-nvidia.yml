@@ -5,72 +5,17 @@ base-image: quay.io/fedora/fedora-silverblue
 image-version: 43
 
 modules:
-  # First: Install RPM Fusion repos and Mullvad repo
-  - type: rpm-ostree
-    repos:
-      - https://repository.mullvad.net/rpm/stable/mullvad.repo
-    install:
-      - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-43.noarch.rpm
-      - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-43.noarch.rpm
+  - from-file: common.yml
 
-  # Second: Install packages (RPM Fusion repos are now available)
-  - type: rpm-ostree
-    remove:
-      - firefox
-      - firefox-langpacks
-      - ffmpeg-free
-      - libavcodec-free
-      - libavdevice-free
-      - libavfilter-free
-      - libavformat-free
-      - libavutil-free
-      - libpostproc-free
-      - libswresample-free
-      - libswscale-free
-      - mesa-va-drivers
-    install:
-      # Codecs and drivers (from RPM Fusion)
-      - ffmpeg
-      - ffmpegthumbnailer
-      - mesa-va-drivers-freeworld
-      - mesa-vdpau-drivers-freeworld
-      - pipewire-codec-aptx
-      # Fonts
-      - google-noto-fonts-all-vf
-      # Terminal tools
-      - alacritty
-      - fish
-      - tmux
-      - bat
-      - lsd
-      # Dev tools
-      - java-latest-openjdk
-      - nmap
-      - tcpdump
-      # Services
-      - mullvad-vpn
-      - nebula
-      - syncthing
-      - waydroid
-
-  # Third: Nvidia kernel modules
+  # Nvidia kernel modules
   - type: akmods
     install:
       - nvidia
 
-  # Fourth: Nvidia userspace packages
+  # Nvidia userspace packages
   - type: rpm-ostree
     install:
       - xorg-x11-drv-nvidia
       - xorg-x11-drv-nvidia-cuda
       - nvidia-vaapi-driver
       - libva-nvidia-driver
-
-  - type: default-flatpaks
-    system:
-      repo-url: ""
-      repo-name: ""
-      repo-title: ""
-      install: []
-      remove:
-        - fedora
