@@ -5,11 +5,16 @@ base-image: quay.io/fedora/fedora-silverblue
 image-version: 43
 
 modules:
+  # First: Install RPM Fusion repos and Mullvad repo
   - type: rpm-ostree
     repos:
+      - https://repository.mullvad.net/rpm/stable/mullvad.repo
+    install:
       - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-43.noarch.rpm
       - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-43.noarch.rpm
-      - https://repository.mullvad.net/rpm/stable/mullvad.repo
+
+  # Second: Now install packages (RPM Fusion repos are now available)
+  - type: rpm-ostree
     remove:
       - firefox
       - firefox-langpacks
@@ -24,7 +29,7 @@ modules:
       - libswscale-free
       - mesa-va-drivers
     install:
-      # Codecs and drivers
+      # Codecs and drivers (from RPM Fusion)
       - ffmpeg
       - ffmpegthumbnailer
       - mesa-va-drivers-freeworld
