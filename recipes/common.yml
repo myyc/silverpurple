@@ -60,7 +60,6 @@ modules:
       - bat
       - lsd
       # Dev tools
-      - java-latest-openjdk
       - nmap
       - tcpdump
       # Services
