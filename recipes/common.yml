@@ -77,49 +77,47 @@ modules:
       enabled:
         - bootc-fetch-apply-updates.timer
 
-  # Flatpak config - remove Fedora remote and all system flatpaks
-  - type: default-flatpaks@v1
-    system:
-      repo-url: ""
-      repo-name: ""
-      repo-title: ""
-      install: []
-      remove:
-        - fedora
-        # Remove all default Silverblue flatpaks (from pungi-fedora config)
-        - org.gnome.baobab
-        - org.gnome.Calculator
-        - org.gnome.Calendar
-        - org.gnome.Characters
-        - org.gnome.Snapshot
-        - org.gnome.clocks
-        - org.gnome.Connections
-        - org.gnome.Contacts
-        - org.gnome.Extensions
-        - org.gnome.font-viewer
-        - org.gnome.TextEditor
-        - org.gnome.Loupe
-        - org.gnome.Logs
-        - org.gnome.Maps
-        - org.fedoraproject.MediaWriter
-        - org.gnome.NautilusPreviewer
-        - org.gnome.Papers
-        - org.gnome.Weather
-    user:
-      repo-url: https://dl.flathub.org/repo/flathub.flatpakrepo
-      repo-name: flathub
-      repo-title: Flathub
-      install:
-        - org.mozilla.firefox
-        - org.gnome.Calculator
-        - org.gnome.Calendar
-        - org.gnome.Contacts
-        - org.gnome.Loupe
-        - org.gnome.NautilusPreviewer
-        - org.gnome.Papers
-        - org.gnome.Weather
-        - org.gnome.font-viewer
-        - com.belmoussaoui.Authenticator
-        - com.mattjakeman.ExtensionManager
-        - org.gtk.Gtk3theme.adw-gtk3
-        - org.gtk.Gtk3theme.adw-gtk3-dark
+  # Flatpak config - remove system flatpaks, set up user Flathub
+  - type: default-flatpaks
+    configurations:
+      # Remove default Silverblue system flatpaks
+      - scope: system
+        remove:
+          - org.gnome.baobab
+          - org.gnome.Calculator
+          - org.gnome.Calendar
+          - org.gnome.Characters
+          - org.gnome.Snapshot
+          - org.gnome.clocks
+          - org.gnome.Connections
+          - org.gnome.Contacts
+          - org.gnome.Extensions
+          - org.gnome.font-viewer
+          - org.gnome.TextEditor
+          - org.gnome.Loupe
+          - org.gnome.Logs
+          - org.gnome.Maps
+          - org.fedoraproject.MediaWriter
+          - org.gnome.NautilusPreviewer
+          - org.gnome.Papers
+          - org.gnome.Weather
+      # User flatpaks from Flathub
+      - scope: user
+        repo:
+          url: https://dl.flathub.org/repo/flathub.flatpakrepo
+          name: flathub
+          title: Flathub
+        install:
+          - org.mozilla.firefox
+          - org.gnome.Calculator
+          - org.gnome.Calendar
+          - org.gnome.Contacts
+          - org.gnome.Loupe
+          - org.gnome.NautilusPreviewer
+          - org.gnome.Papers
+          - org.gnome.Weather
+          - org.gnome.font-viewer
+          - com.belmoussaoui.Authenticator
+          - com.mattjakeman.ExtensionManager
+          - org.gtk.Gtk3theme.adw-gtk3
+          - org.gtk.Gtk3theme.adw-gtk3-dark

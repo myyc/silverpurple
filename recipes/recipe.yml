@@ -1,5 +1,5 @@
 name: silverpurple
-description: Custom Fedora Silverblue image
+description: A custom Silverblue image with stuff you actually need
 
 base-image: quay.io/fedora/fedora-silverblue
 image-version: 43
