@@ -5,7 +5,7 @@ on:
     - cron: "0 4 * * *" # Daily at 04:00 UTC
   push:
     branches:
-      - main
+      - master
   pull_request:
   workflow_dispatch:
 
@@ -34,6 +34,8 @@ jobs:
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
+          rechunk: true
+          use_cache: true
 
   notify:
     name: Notify on failure
