@@ -4,3 +4,6 @@ enable-animations=false
 
 [org.gnome.mutter]
 experimental-features=['scale-monitor-framebuffer', 'autoclose-xwayland', 'variable-refresh-rate']
+
+[org.gnome.shell]
+favorite-apps=['Alacritty.desktop', 'org.mozilla.firefox.desktop']

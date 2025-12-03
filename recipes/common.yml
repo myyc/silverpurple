@@ -73,7 +73,6 @@ modules:
       - mullvad-vpn
       - nebula
       - syncthing
-      - waydroid
 
   # Flatpak config - remove Fedora remote and all system flatpaks
   - type: default-flatpaks@v1
