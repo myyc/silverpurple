@@ -3,11 +3,23 @@
 modules:
   # OS branding
   - type: os-release
-    PRETTY_NAME: Silverpurple
-    NAME: Silverpurple
+    properties:
+      PRETTY_NAME: Silverpurple
+      NAME: Silverpurple
 
   # Signing policy (baked into image for automatic verification)
   - type: signing
+
+  # Nerd Fonts
+  - type: fonts
+    fonts:
+      nerd-fonts:
+        - JetBrainsMono
+
+  # GNOME settings defaults
+  - type: gschema-overrides
+    include:
+      - zz1-silverpurple.gschema.override
 
   # First: Install RPM Fusion repos and Mullvad repo
   - type: rpm-ostree
