@@ -74,6 +74,14 @@ modules:
       - nebula
       - syncthing
 
+  # Disable rpm-ostree auto-updates, enable bootc auto-updates
+  - type: systemd
+    system:
+      disabled:
+        - rpm-ostreed-automatic.timer
+      enabled:
+        - bootc-fetch-apply-updates.timer
+
   # Flatpak config - remove Fedora remote and all system flatpaks
   - type: default-flatpaks@v1
     system:
