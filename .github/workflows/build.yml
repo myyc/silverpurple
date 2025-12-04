@@ -31,6 +31,7 @@ jobs:
           pr_event_number: ${{ github.event.number }}
           rechunk: true
           use_cache: true
+          retry_push_count: 3
 
   # Stage 2: Build images that depend on base (parallel)
   build-base-nvidia:
@@ -51,6 +52,7 @@ jobs:
           pr_event_number: ${{ github.event.number }}
           rechunk: true
           use_cache: true
+          retry_push_count: 3
 
   build-silverpurple:
     name: Build silverpurple
@@ -70,6 +72,7 @@ jobs:
           pr_event_number: ${{ github.event.number }}
           rechunk: true
           use_cache: true
+          retry_push_count: 3
 
   # Stage 3: Build silverpurple-nvidia (depends on base-nvidia)
   build-silverpurple-nvidia:
@@ -90,6 +93,7 @@ jobs:
           pr_event_number: ${{ github.event.number }}
           rechunk: true
           use_cache: true
+          retry_push_count: 3
 
   notify:
     name: Notify on failure
