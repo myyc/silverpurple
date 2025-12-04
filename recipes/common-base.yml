@@ -1,0 +1,72 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/module-list-v1.json
+# Base modules - core functionality without opinionated choices
+modules:
+  # Signing policy (baked into image for automatic verification)
+  - type: signing
+
+  # Repositories: RPM Fusion
+  - type: dnf
+    repos:
+      nonfree: rpmfusion
+
+  # Packages: codecs and driver replacements
+  - type: rpm-ostree
+    remove:
+      - firefox
+      - firefox-langpacks
+      - ffmpeg-free
+      - libavcodec-free
+      - libavdevice-free
+      - libavfilter-free
+      - libavformat-free
+      - libavutil-free
+      - libpostproc-free
+      - libswresample-free
+      - libswscale-free
+      - mesa-va-drivers
+    install:
+      - ffmpeg
+      - ffmpegthumbnailer
+      - mesa-va-drivers-freeworld
+      - mesa-vdpau-drivers-freeworld
+      - pipewire-codec-aptx
+
+  # Disable rpm-ostree auto-updates, enable bootc auto-updates
+  - type: systemd
+    system:
+      disabled:
+        - rpm-ostreed-automatic.timer
+      enabled:
+        - bootc-fetch-apply-updates.timer
+
+  # Flatpak: remove system flatpaks, set up Flathub user remote + Firefox
+  - type: default-flatpaks
+    configurations:
+      - scope: system
+        remove:
+          - org.gnome.baobab
+          - org.gnome.Calculator
+          - org.gnome.Calendar
+          - org.gnome.Characters
+          - org.gnome.Snapshot
+          - org.gnome.clocks
+          - org.gnome.Connections
+          - org.gnome.Contacts
+          - org.gnome.Extensions
+          - org.gnome.font-viewer
+          - org.gnome.TextEditor
+          - org.gnome.Loupe
+          - org.gnome.Logs
+          - org.gnome.Maps
+          - org.fedoraproject.MediaWriter
+          - org.gnome.NautilusPreviewer
+          - org.gnome.Papers
+          - org.gnome.Weather
+      - scope: user
+        repo:
+          url: https://dl.flathub.org/repo/flathub.flatpakrepo
+          name: flathub
+          title: Flathub
+        install:
+          - org.mozilla.firefox

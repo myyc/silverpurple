@@ -13,24 +13,78 @@ env:
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
 
 jobs:
-  build:
-    name: Build ${{ matrix.recipe }}
+  # Stage 1: Build base image (from fedora-silverblue)
+  build-base:
+    name: Build silverpurple-base
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
       id-token: write
-    strategy:
-      fail-fast: false
-      matrix:
-        recipe:
-          - recipe.yml
-          - recipe-nvidia.yml
     steps:
       - name: Build image
         uses: blue-build/github-action@v1
         with:
-          recipe: ${{ matrix.recipe }}
+          recipe: base.yml
+          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
+          registry_token: ${{ github.token }}
+          pr_event_number: ${{ github.event.number }}
+          rechunk: true
+          use_cache: true
+
+  # Stage 2: Build images that depend on base (parallel)
+  build-base-nvidia:
+    name: Build silverpurple-base-nvidia
+    runs-on: ubuntu-latest
+    needs: build-base
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Build image
+        uses: blue-build/github-action@v1
+        with:
+          recipe: base-nvidia.yml
+          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
+          registry_token: ${{ github.token }}
+          pr_event_number: ${{ github.event.number }}
+          rechunk: true
+          use_cache: true
+
+  build-silverpurple:
+    name: Build silverpurple
+    runs-on: ubuntu-latest
+    needs: build-base
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Build image
+        uses: blue-build/github-action@v1
+        with:
+          recipe: recipe.yml
+          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
+          registry_token: ${{ github.token }}
+          pr_event_number: ${{ github.event.number }}
+          rechunk: true
+          use_cache: true
+
+  # Stage 3: Build silverpurple-nvidia (depends on base-nvidia)
+  build-silverpurple-nvidia:
+    name: Build silverpurple-nvidia
+    runs-on: ubuntu-latest
+    needs: build-base-nvidia
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Build image
+        uses: blue-build/github-action@v1
+        with:
+          recipe: recipe-nvidia.yml
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
           registry_token: ${{ github.token }}
           pr_event_number: ${{ github.event.number }}
@@ -40,7 +94,7 @@ jobs:
   notify:
     name: Notify on failure
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build-base, build-base-nvidia, build-silverpurple, build-silverpurple-nvidia]
     if: failure()
     steps:
       - name: Send Telegram notification

@@ -1,9 +1,7 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/module-list-v1.json
+# Opinionated modules - extends base with personal preferences
 modules:
-  # Signing policy (baked into image for automatic verification)
-  - type: signing
-
   # Nerd Fonts
   - type: fonts
     fonts:
@@ -23,36 +21,17 @@ modules:
       - source: udev-rules
         destination: /etc/udev/rules.d
 
-  # Repositories: RPM Fusion (via dnf module) and Mullvad
+  # Mullvad repo
   - type: dnf
     repos:
-      nonfree: rpmfusion
       files:
         - https://repository.mullvad.net/rpm/stable/mullvad.repo
 
   # Packages
   - type: rpm-ostree
     remove:
-      - firefox
-      - firefox-langpacks
-      - ffmpeg-free
-      - libavcodec-free
-      - libavdevice-free
-      - libavfilter-free
-      - libavformat-free
-      - libavutil-free
-      - libpostproc-free
-      - libswresample-free
-      - libswscale-free
-      - mesa-va-drivers
       - pipewire-config-raop
     install:
-      # Codecs and drivers (from RPM Fusion)
-      - ffmpeg
-      - ffmpegthumbnailer
-      - mesa-va-drivers-freeworld
-      - mesa-vdpau-drivers-freeworld
-      - pipewire-codec-aptx
       # Fonts
       - google-noto-fonts-all-vf
       # Terminal tools
@@ -69,46 +48,11 @@ modules:
       - nebula
       - syncthing
 
-  # Disable rpm-ostree auto-updates, enable bootc auto-updates
-  - type: systemd
-    system:
-      disabled:
-        - rpm-ostreed-automatic.timer
-      enabled:
-        - bootc-fetch-apply-updates.timer
-
-  # Flatpak config - remove system flatpaks, set up user Flathub
+  # Additional user flatpaks
   - type: default-flatpaks
     configurations:
-      # Remove default Silverblue system flatpaks
-      - scope: system
-        remove:
-          - org.gnome.baobab
-          - org.gnome.Calculator
-          - org.gnome.Calendar
-          - org.gnome.Characters
-          - org.gnome.Snapshot
-          - org.gnome.clocks
-          - org.gnome.Connections
-          - org.gnome.Contacts
-          - org.gnome.Extensions
-          - org.gnome.font-viewer
-          - org.gnome.TextEditor
-          - org.gnome.Loupe
-          - org.gnome.Logs
-          - org.gnome.Maps
-          - org.fedoraproject.MediaWriter
-          - org.gnome.NautilusPreviewer
-          - org.gnome.Papers
-          - org.gnome.Weather
-      # User flatpaks from Flathub
       - scope: user
-        repo:
-          url: https://dl.flathub.org/repo/flathub.flatpakrepo
-          name: flathub
-          title: Flathub
         install:
-          - org.mozilla.firefox
           - org.gnome.Calculator
           - org.gnome.Calendar
           - org.gnome.Contacts

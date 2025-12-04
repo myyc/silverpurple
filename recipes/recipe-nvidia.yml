@@ -1,14 +1,8 @@
 name: silverpurple-nvidia
 description: A custom Silverblue image with stuff you actually need (nvidia version)
 
-base-image: quay.io/fedora/fedora-silverblue
-image-version: 43
+base-image: ghcr.io/myyc/silverpurple-base-nvidia
+image-version: latest
 
 modules:
   - from-file: common.yml
-
-  # Nvidia kernel modules (from ublue-os/akmods)
-  - type: akmods
-    base: main
-    nvidia-driver: nvidia
-    install: []

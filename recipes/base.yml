@@ -1,0 +1,8 @@
+name: silverpurple-base
+description: Fedora Silverblue with working codecs and Flathub
+
+base-image: quay.io/fedora/fedora-silverblue
+image-version: 43
+
+modules:
+  - from-file: common-base.yml

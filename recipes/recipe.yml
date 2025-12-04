@@ -1,8 +1,8 @@
 name: silverpurple
 description: A custom Silverblue image with stuff you actually need
 
-base-image: quay.io/fedora/fedora-silverblue
-image-version: 43
+base-image: ghcr.io/myyc/silverpurple-base
+image-version: latest
 
 modules:
   - from-file: common.yml

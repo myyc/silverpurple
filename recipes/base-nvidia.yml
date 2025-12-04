@@ -1,0 +1,12 @@
+name: silverpurple-base-nvidia
+description: Fedora Silverblue with working codecs, Flathub, and Nvidia drivers
+
+base-image: ghcr.io/myyc/silverpurple-base
+image-version: latest
+
+modules:
+  # Nvidia kernel modules (from ublue-os/akmods)
+  - type: akmods
+    base: main
+    nvidia-driver: nvidia
+    install: []
