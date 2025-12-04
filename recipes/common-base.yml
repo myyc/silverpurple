@@ -32,14 +32,6 @@ modules:
       - mesa-vdpau-drivers-freeworld
       - pipewire-codec-aptx
 
-  # Disable rpm-ostree auto-updates, enable bootc auto-updates
-  - type: systemd
-    system:
-      disabled:
-        - rpm-ostreed-automatic.timer
-      enabled:
-        - bootc-fetch-apply-updates.timer
-
   # Flatpak: remove system flatpaks, set up Flathub user remote + Firefox
   - type: default-flatpaks
     configurations:
