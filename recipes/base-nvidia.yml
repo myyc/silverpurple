@@ -5,6 +5,8 @@ base-image: ghcr.io/myyc/silverpurple-base
 image-version: latest
 
 modules:
+  - type: signing
+
   # Nvidia kernel modules (from ublue-os/akmods)
   - type: akmods
     base: main

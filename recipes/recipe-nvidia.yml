@@ -5,4 +5,5 @@ base-image: ghcr.io/myyc/silverpurple-base-nvidia
 image-version: latest
 
 modules:
+  - type: signing
   - from-file: common.yml
