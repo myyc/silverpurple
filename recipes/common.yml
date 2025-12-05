@@ -21,11 +21,13 @@ modules:
       - source: udev-rules
         destination: /etc/udev/rules.d
 
-  # Mullvad repo
+  # Additional repos
   - type: dnf
     repos:
       files:
         - https://repository.mullvad.net/rpm/stable/mullvad.repo
+      coprs:
+        - atim/nushell
 
   # Packages
   - type: rpm-ostree
@@ -37,9 +39,11 @@ modules:
       # Terminal tools
       - alacritty
       - fish
+      - nushell
       - tmux
       - bat
       - lsd
+      - neovim
       # Dev tools
       - nmap
       - tcpdump
