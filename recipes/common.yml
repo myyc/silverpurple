@@ -21,15 +21,11 @@ modules:
       - source: udev-rules
         destination: /etc/udev/rules.d
 
-  # Additional repos
-  - type: dnf
-    repos:
-      files:
-        - https://repository.mullvad.net/rpm/stable/mullvad.repo
-        - https://copr.fedorainfracloud.org/coprs/atim/nushell/repo/fedora-$releasever/atim-nushell-fedora-$releasever.repo
-
   # Packages
   - type: rpm-ostree
+    repos:
+      - https://repository.mullvad.net/rpm/stable/mullvad.repo
+      - https://copr.fedorainfracloud.org/coprs/atim/nushell/repo/fedora-%OS_VERSION%/atim-nushell-fedora-%OS_VERSION%.repo
     remove:
       - pipewire-config-raop
     install:
