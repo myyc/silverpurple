@@ -26,8 +26,7 @@ modules:
     repos:
       files:
         - https://repository.mullvad.net/rpm/stable/mullvad.repo
-      coprs:
-        - atim/nushell
+        - https://copr.fedorainfracloud.org/coprs/atim/nushell/repo/fedora-$releasever/atim-nushell-fedora-$releasever.repo
 
   # Packages
   - type: rpm-ostree
