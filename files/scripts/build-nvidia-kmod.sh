@@ -20,18 +20,20 @@ dnf download xorg-x11-drv-nvidia xorg-x11-drv-nvidia-kmodsrc akmod-nvidia
 rpm -ivh --noscripts --nodeps xorg-x11-drv-nvidia-*.rpm akmod-nvidia-*.rpm
 rm -f *.rpm
 
-# Create a non-root user for building with writable directory
+# Create a non-root user for building with writable directories
 useradd -m builder || true
-BUILD_DIR=/var/tmp/nvidia-build
-mkdir -p ${BUILD_DIR}
-chown builder:builder ${BUILD_DIR}
+BUILD_DIR=/home/builder/rpmbuild
+mkdir -p ${BUILD_DIR}/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+chown -R builder:builder /home/builder
 
-# Build the kmod as non-root user
-cd ${BUILD_DIR}
+# Make /var/tmp and /tmp writable for the build process
+chmod 1777 /var/tmp /tmp
+
+# Build the kmod as non-root user (use home dir for rpmbuild)
 su builder -c "akmodsbuild --target $(uname -m) --kernels ${KERNEL_VERSION} /usr/src/akmods/nvidia-kmod.latest"
 
 # Find and install the built kmod
-KMOD_RPM=$(find ${BUILD_DIR} /home/builder -name "kmod-nvidia-*.rpm" 2>/dev/null | head -1)
+KMOD_RPM=$(find /home/builder -name "kmod-nvidia-*.rpm" 2>/dev/null | head -1)
 if [[ -z "${KMOD_RPM}" ]]; then
     echo "ERROR: Failed to find built kmod RPM"
     exit 1
@@ -42,7 +44,7 @@ rpm -ivh "${KMOD_RPM}"
 
 # Cleanup build-only dependencies
 userdel -r builder || true
-rm -rf ${BUILD_DIR}
+rm -rf /var/tmp/* /tmp/akmodsbuild.* 2>/dev/null || true
 rpm -e --nodeps xorg-x11-drv-nvidia-kmodsrc akmod-nvidia
 dnf remove -y kernel-devel-${KERNEL_VERSION} rpm-build akmods
 dnf autoremove -y
