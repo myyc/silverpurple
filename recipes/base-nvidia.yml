@@ -8,9 +8,33 @@ modules:
   - type: signing
 
   # Nvidia drivers - build kmod during image build
+  # Using snippet instead of script to avoid BlueBuild file permission issues
   - type: script
-    scripts:
-      - build-nvidia-kmod.sh
+    snippets:
+      - |
+        set -euo pipefail
+        KERNEL_VERSION=$(rpm -q --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' kernel)
+        echo "Building nvidia kmod for kernel ${KERNEL_VERSION}"
+        dnf install -y kernel-devel-${KERNEL_VERSION} akmods rpm-build
+        chmod 1777 /var/tmp /tmp
+        dnf download xorg-x11-drv-nvidia xorg-x11-drv-nvidia-kmodsrc akmod-nvidia
+        rpm -ivh --noscripts --nodeps xorg-x11-drv-nvidia-*.rpm akmod-nvidia-*.rpm
+        rm -f *.rpm
+        useradd -m builder 2>/dev/null || true
+        mkdir -p /home/builder/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+        chown -R builder:builder /home/builder
+        su builder -c "akmodsbuild --target $(uname -m) --kernels ${KERNEL_VERSION} /usr/src/akmods/nvidia-kmod.latest"
+        KMOD_RPM=$(find /home/builder -name "kmod-nvidia-*.rpm" 2>/dev/null | head -1)
+        if [[ -z "${KMOD_RPM}" ]]; then echo "ERROR: Failed to find built kmod RPM"; exit 1; fi
+        echo "Installing ${KMOD_RPM}"
+        rpm -ivh "${KMOD_RPM}"
+        userdel -r builder || true
+        rm -rf /var/tmp/* /tmp/akmodsbuild.* 2>/dev/null || true
+        rpm -e --nodeps xorg-x11-drv-nvidia-kmodsrc akmod-nvidia
+        dnf remove -y kernel-devel-${KERNEL_VERSION} rpm-build akmods
+        dnf autoremove -y
+        dnf clean all
+        echo "nvidia kmod build complete"
 
   # Nvidia userspace packages
   - type: rpm-ostree
