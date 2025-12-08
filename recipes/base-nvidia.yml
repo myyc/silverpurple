@@ -12,4 +12,4 @@ modules:
     install:
       - akmod-nvidia
       - xorg-x11-drv-nvidia
-      - nvidia-vaapi-driver
+      - libva-nvidia-driver
