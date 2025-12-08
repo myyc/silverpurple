@@ -52,6 +52,16 @@ rpm-ostree rebase ostree-unverified-registry:ghcr.io/myyc/silverpurple-nvidia:la
 
 Reboot, then you're set. Future upgrades use signed verification automatically.
 
+### Nvidia: blacklist nouveau
+
+After rebasing to an nvidia image, blacklist the nouveau driver:
+
+```bash
+rpm-ostree kargs --append=rd.driver.blacklist=nouveau,nova_core --append=modprobe.blacklist=nouveau,nova_core
+```
+
+Reboot. On first boot, the `akmods` service will build the nvidia kernel module (this takes a few minutes). After another reboot, nvidia is ready.
+
 ## Verification
 
 Images are signed with cosign. Public key: [cosign.pub](cosign.pub)

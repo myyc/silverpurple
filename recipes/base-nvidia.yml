@@ -7,8 +7,9 @@ image-version: latest
 modules:
   - type: signing
 
-  # Nvidia kernel modules (from ublue-os/akmods)
-  - type: akmods
-    base: main
-    nvidia-driver: nvidia
-    install: []
+  # Nvidia drivers from RPM Fusion (builds kernel modules on first boot)
+  - type: rpm-ostree
+    install:
+      - akmod-nvidia
+      - xorg-x11-drv-nvidia
+      - nvidia-vaapi-driver
