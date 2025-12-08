@@ -8,18 +8,19 @@ KERNEL_VERSION=$(rpm -q --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' kernel)
 
 echo "Building nvidia kmod for kernel ${KERNEL_VERSION}"
 
-# Install build dependencies using dnf
+# Install build dependencies - exclude akmod-nvidia to prevent scriptlet failure
 dnf install -y \
     kernel-devel-${KERNEL_VERSION} \
     akmods \
-    rpm-build \
-    xorg-x11-drv-nvidia-kmodsrc \
-    nvidia-kmod-common
+    rpm-build
 
-# Download akmod-nvidia and install with --noscripts to skip the root check
-dnf download akmod-nvidia
-rpm -ivh --noscripts akmod-nvidia-*.rpm
-rm -f akmod-nvidia-*.rpm
+# Download nvidia packages and install with --noscripts
+dnf download xorg-x11-drv-nvidia-kmodsrc nvidia-kmod-common akmod-nvidia
+rpm -ivh --noscripts --nodeps \
+    xorg-x11-drv-nvidia-kmodsrc-*.rpm \
+    nvidia-kmod-common-*.rpm \
+    akmod-nvidia-*.rpm
+rm -f *.rpm
 
 # Create a non-root user for building
 useradd -m builder || true
@@ -39,12 +40,8 @@ rpm -ivh "${KMOD_RPM}"
 
 # Cleanup build-only dependencies
 userdel -r builder || true
-dnf remove -y \
-    kernel-devel-${KERNEL_VERSION} \
-    rpm-build \
-    xorg-x11-drv-nvidia-kmodsrc \
-    akmods \
-    akmod-nvidia
+rpm -e --nodeps xorg-x11-drv-nvidia-kmodsrc akmod-nvidia
+dnf remove -y kernel-devel-${KERNEL_VERSION} rpm-build akmods
 dnf autoremove -y
 dnf clean all
 
