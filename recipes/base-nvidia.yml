@@ -7,9 +7,13 @@ image-version: latest
 modules:
   - type: signing
 
-  # Nvidia drivers from RPM Fusion (builds kernel modules on first boot)
+  # Nvidia drivers - build kmod during image build
+  - type: script
+    scripts:
+      - build-nvidia-kmod.sh
+
+  # Nvidia userspace packages
   - type: rpm-ostree
     install:
-      - akmod-nvidia
       - xorg-x11-drv-nvidia
       - libva-nvidia-driver
