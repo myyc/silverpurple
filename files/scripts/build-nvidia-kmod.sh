@@ -15,11 +15,9 @@ dnf install -y \
     rpm-build
 
 # Download nvidia packages and install with --noscripts
-dnf download xorg-x11-drv-nvidia-kmodsrc nvidia-kmod-common akmod-nvidia
-rpm -ivh --noscripts --nodeps \
-    xorg-x11-drv-nvidia-kmodsrc-*.rpm \
-    nvidia-kmod-common-*.rpm \
-    akmod-nvidia-*.rpm
+# nvidia-kmod-common is a subpackage of xorg-x11-drv-nvidia
+dnf download xorg-x11-drv-nvidia xorg-x11-drv-nvidia-kmodsrc akmod-nvidia
+rpm -ivh --noscripts --nodeps xorg-x11-drv-nvidia-*.rpm akmod-nvidia-*.rpm
 rm -f *.rpm
 
 # Create a non-root user for building
