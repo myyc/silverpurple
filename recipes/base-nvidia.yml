@@ -9,7 +9,7 @@ modules:
 
   # Nvidia drivers - build kmod during image build
   - type: containerfile
-    containerfiles:
+    snippets:
       - |
         RUN set -euo pipefail && \
             KERNEL_VERSION=$(rpm -q --queryformat '%{VERSION}-%{RELEASE}.%{ARCH}' kernel) && \
