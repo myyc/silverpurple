@@ -14,6 +14,9 @@ dnf install -y \
     akmods \
     rpm-build
 
+# Make /var/tmp and /tmp writable for the build process
+chmod 1777 /var/tmp /tmp
+
 # Download nvidia packages and install with --noscripts
 # nvidia-kmod-common is a subpackage of xorg-x11-drv-nvidia
 dnf download xorg-x11-drv-nvidia xorg-x11-drv-nvidia-kmodsrc akmod-nvidia
@@ -21,13 +24,10 @@ rpm -ivh --noscripts --nodeps xorg-x11-drv-nvidia-*.rpm akmod-nvidia-*.rpm
 rm -f *.rpm
 
 # Create a non-root user for building with writable directories
-useradd -m builder || true
+useradd -m builder 2>/dev/null || true
 BUILD_DIR=/home/builder/rpmbuild
 mkdir -p ${BUILD_DIR}/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 chown -R builder:builder /home/builder
-
-# Make /var/tmp and /tmp writable for the build process
-chmod 1777 /var/tmp /tmp
 
 # Build the kmod as non-root user (use home dir for rpmbuild)
 su builder -c "akmodsbuild --target $(uname -m) --kernels ${KERNEL_VERSION} /usr/src/akmods/nvidia-kmod.latest"
