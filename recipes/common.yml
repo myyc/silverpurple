@@ -39,6 +39,7 @@ modules:
       - bat
       - lsd
       - neovim
+      - sg3_utils
       # Dev tools
       - nmap
       - tcpdump
